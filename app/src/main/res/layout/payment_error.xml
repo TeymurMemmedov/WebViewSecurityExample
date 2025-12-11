@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="#FFFFFF">
+
+    <ImageView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@android:drawable/ic_delete"
+        app:tint="#D32F2F" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment Failed"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:paddingTop="20dp"
+        android:textColor="#C62828"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="We couldn't process your transaction.\nPlease try again."
+        android:textSize="16sp"
+        android:paddingTop="10dp"
+        android:gravity="center"
+        android:textColor="#555555"/>
+
+    <Button
+        android:id="@+id/btnRetryPayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Retry"
+        android:layout_marginTop="30dp" />
+
+    <Button
+        android:id="@+id/btnErrorBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back to Home"
+        android:layout_marginTop="10dp" />
+
+</LinearLayout>

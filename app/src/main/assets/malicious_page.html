@@ -1,0 +1,97 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .button {
+            width: 100%;
+            padding: 14px;
+            background: #1976D2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        #loading {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #msg {
+            margin-top: 20px;
+            font-size: 16px;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Payment</h2>
+
+<label>Card Number</label>
+<input id="card" class="input-field" placeholder="1234 5678 9012 3456" />
+
+<label>Amount</label>
+<input id="amount" class="input-field" placeholder="50.00" />
+
+<button class="button" onclick="processPayment()">Submit Payment</button>
+
+<div id="loading">Processing payment...</div>
+
+<!-- Here we show the result text -->
+<p id="msg"></p>
+
+<script>
+
+    function processPayment() {
+
+        const card = document.getElementById("card").value.trim();
+        const amount = document.getElementById("amount").value.trim();
+
+        if (card.length < 8 || amount.length === 0) {
+            document.getElementById("msg").innerText = "Please enter valid card & amount";
+            return;
+        }
+
+        document.getElementById("msg").innerText = ""; // clear old messages
+        document.getElementById("loading").style.display = "block";
+
+        setTimeout(() => {
+            try {
+                const lastDigit = parseInt(card[card.length - 1]);
+                let result;
+
+                if (!isNaN(lastDigit) && lastDigit % 2 === 0) {
+                    result = NativeApp.openScreen("profile");
+                } else {
+                    result = NativeApp.openScreen("profile");
+                }
+
+                // If JS bridge blocks action securely
+                if (result === "NOT_ALLOWED" || result === "ERROR:FAIL") {
+                    document.getElementById("msg").innerText = "Action not permitted in secure mode.";
+                }
+
+            } catch (e) {
+                document.getElementById("msg").innerText = "Bridge not available.";
+            }
+
+        }, 1500);
+    }
+
+</script>
+
+</body>
+</html>
