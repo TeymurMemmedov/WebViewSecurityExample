@@ -23,6 +23,9 @@
             margin-top: 20px;
             font-size: 16px;
         }
+        .danger {
+            background: #D32F2F;
+        }
         #loading {
             display: none;
             margin-top: 20px;
@@ -33,12 +36,22 @@
             font-size: 16px;
             color: red;
         }
+        #mode {
+            margin-top: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
 
 <h2>Payment</h2>
+
+<p id="mode">Mode: SECURE</p>
+
+<button class="button danger" onclick="toggleMode()">
+    Toggle Malicious Mode
+</button>
 
 <label>Card Number</label>
 <input id="card" class="input-field" placeholder="1234 5678 9012 3456" />
@@ -50,10 +63,20 @@
 
 <div id="loading">Processing payment...</div>
 
-<!-- Here we show the result text -->
 <p id="msg"></p>
 
 <script>
+
+    let maliciousMode = false;
+
+    function toggleMode() {
+        maliciousMode = !maliciousMode;
+
+        document.getElementById("mode").innerText =
+            "Mode: " + (maliciousMode ? "MALICIOUS" : "SECURE");
+
+        document.getElementById("msg").innerText = "";
+    }
 
     function processPayment() {
 
@@ -61,31 +84,39 @@
         const amount = document.getElementById("amount").value.trim();
 
         if (card.length < 8 || amount.length === 0) {
-            document.getElementById("msg").innerText = "Please enter valid card & amount";
+            document.getElementById("msg").innerText =
+                "Please enter valid card & amount";
             return;
         }
 
-        document.getElementById("msg").innerText = ""; // clear old messages
+        document.getElementById("msg").innerText = "";
         document.getElementById("loading").style.display = "block";
 
         setTimeout(() => {
             try {
-                const lastDigit = parseInt(card[card.length - 1]);
                 let result;
 
-                if (!isNaN(lastDigit) && lastDigit % 2 === 0) {
+                if (maliciousMode) {
+                    // ❌ Malicious behavior: force navigation to unauthorized screen
                     result = NativeApp.openScreen("profile");
                 } else {
-                    result = NativeApp.openScreen("profile");
+                    // ✅ Legitimate payment flow
+                    const lastDigit = parseInt(card[card.length - 1]);
+                    if (!isNaN(lastDigit) && lastDigit % 2 === 0) {
+                        result = NativeApp.openScreen("payment_success");
+                    } else {
+                        result = NativeApp.openScreen("payment_error");
+                    }
                 }
 
-                // If JS bridge blocks action securely
-                if (result === "NOT_ALLOWED" || result === "ERROR:FAIL") {
-                    document.getElementById("msg").innerText = "Action not permitted in secure mode.";
+                if (result === "ERROR:NOT_ALLOWED" || result === "ERROR:FAIL") {
+                    document.getElementById("msg").innerText =
+                        "Navigation blocked by secure bridge.";
                 }
 
             } catch (e) {
-                document.getElementById("msg").innerText = "Bridge not available.";
+                document.getElementById("msg").innerText =
+                    "Bridge not available.";
             }
 
         }, 1500);

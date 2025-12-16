@@ -66,7 +66,7 @@ class AndroidBridgeSecure(val context: Context) {
 
             return "OK"
         }else{
-            return "NOT_ALLOWED"
+            return "ERROR:NOT_ALLOWED"
         }
     }
 }
